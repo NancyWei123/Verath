@@ -122,50 +122,10 @@ const AuthLanding = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-background overflow-x-hidden font-sans">
+    <div className="relative min-h-screen bg-white overflow-x-hidden font-sans">
       <Navbar />
 
-      <div className="absolute inset-0 bg-mesh z-0" />
-      <div className="bg-noise" />
 
-      {/* Grid squares */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{
-        backgroundImage: `
-          linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px)
-        `,
-        backgroundSize: '52px 52px',
-      }} />
-
-      {/* Radial vignette */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 85% 75% at 50% 40%, transparent 25%, rgba(5,7,20,0.88) 100%)'
-      }} />
-
-      {/* Glow Blobs */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full mix-blend-screen filter blur-[128px] opacity-30 z-0 pointer-events-none"
-      />
-      <motion.div
-        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-secondary rounded-full mix-blend-screen filter blur-[128px] opacity-20 z-0 pointer-events-none"
-      />
-
-      {/* System Online Badge */}
-      <div className="relative z-10 w-full flex justify-center pt-24 pb-2">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border"
-        >
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs font-medium text-gray-300">System Online</span>
-        </motion.div>
-      </div>
 
       {/*
        * FIX: Main grid gap reduced from `gap-12 lg:gap-16` to `gap-8 lg:gap-16`.
@@ -176,7 +136,7 @@ const AuthLanding = () => {
        * FIX: Outer padding changed from `px-6` to `px-4 sm:px-6` to give
        * 320px-wide devices (iPhone SE) slightly more horizontal breathing room.
        */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-20 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
         {/* Left Section */}
         <motion.div
@@ -194,7 +154,7 @@ const AuthLanding = () => {
                * `text-5xl` (3rem / 48px) overflowed the column. `text-4xl`
                * (2.25rem) fits comfortably on the smallest common viewport.
                */
-              className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-400"
+              className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold tracking-tight text-gray-900"
             />
             <AnimatedSubtitle
               text="Capture conversations, thoughts, meetings, and ideas — then retrieve them instantly using AI-powered semantic memory."
@@ -203,28 +163,28 @@ const AuthLanding = () => {
                * Tailwind's `break-words` class to prevent long words/URLs from
                * causing horizontal overflow on narrow viewports.
                */
-              className="text-lg text-gray-400 leading-relaxed max-w-xl break-words"
+              className="text-lg text-gray-600 leading-relaxed max-w-xl break-words"
             />
           </div>
 
           {/* Features Grid — grid-cols-1 sm:grid-cols-2 already correct */}
           <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { icon: Brain, title: "AI Memory Extraction", desc: "Auto-detects intents & entities." },
-              { icon: Search, title: "Hybrid Semantic Search", desc: "Vector search + neural re-ranking." },
-              { icon: ShieldCheck, title: "Cloud Inference Privacy", desc: "Secure & fast processing." },
-              { icon: Bell, title: "Smart Reminder Intelligence", desc: "Extracts temporal deadlines." },
+              { icon: Brain, title: "AI Memory Extraction", desc: "Auto-detects intents & entities.", borderColor: "border-purple-500", iconColor: "text-purple-600", iconBg: "bg-purple-100" },
+              { icon: Search, title: "Hybrid Semantic Search", desc: "Vector search + neural re-ranking.", borderColor: "border-blue-500", iconColor: "text-blue-600", iconBg: "bg-blue-100" },
+              { icon: ShieldCheck, title: "Cloud Inference Privacy", desc: "Secure & fast processing.", borderColor: "border-green-500", iconColor: "text-green-600", iconBg: "bg-green-100" },
+              { icon: Bell, title: "Smart Reminder Intelligence", desc: "Extracts temporal deadlines.", borderColor: "border-orange-500", iconColor: "text-orange-600", iconBg: "bg-orange-100" },
             ].map((feature, idx) => (
               <motion.div
                 key={idx}
                 whileHover={{ y: -4, scale: 1.02 }}
-                className="p-5 rounded-2xl glass-card border border-white/10 group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(139,92,246,0.18)] hover:bg-white/[0.03]"
+                className={`p-5 rounded-2xl bg-white border-2 ${feature.borderColor} group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-opacity-80 hover:shadow-xl`}
               >
-                <div className="w-10 h-10 rounded-lg bg-surface-hover flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20">
-                  <feature.icon className="w-5 h-5 text-gray-400 group-hover:text-primary" />
+                <div className={`w-10 h-10 rounded-lg ${feature.iconBg} flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
+                  <feature.icon className={`w-5 h-5 ${feature.iconColor}`} />
                 </div>
-                <h3 className="text-white font-medium mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-500">{feature.desc}</p>
+                <h3 className="text-gray-900 font-medium mb-1">{feature.title}</h3>
+                <p className="text-sm text-gray-600">{feature.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -233,8 +193,8 @@ const AuthLanding = () => {
           <motion.div variants={itemVariants} className="flex gap-4 pt-4">
             <div className="flex -space-x-3 flex-shrink-0">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-surface flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-900">
-                  <User className="w-4 h-4 text-gray-400" />
+                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
+                  <User className="w-4 h-4 text-gray-600" />
                 </div>
               ))}
             </div>
@@ -242,7 +202,7 @@ const AuthLanding = () => {
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} />)}
               </div>
-              <span className="text-xs text-gray-400 font-medium mt-1">Trusted by 10,000+ thinkers</span>
+              <span className="text-xs text-gray-600 font-medium mt-1">Trusted by 10,000+ thinkers</span>
             </div>
           </motion.div>
         </motion.div>
@@ -250,8 +210,8 @@ const AuthLanding = () => {
         {/* Right Section - Auth Card */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0, y: [0, -2, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex justify-center lg:justify-end"
         >
           {/*
@@ -263,34 +223,34 @@ const AuthLanding = () => {
           <div className="relative w-full max-w-md min-w-0">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-20"></div>
 
-            <div className="relative p-8 rounded-3xl bg-[#111827]/90 backdrop-blur-xl border border-white/20 shadow-2xl hover:border-primary/40 transition-all duration-500">
-              <div className="flex items-center justify-between mb-8 p-1 bg-surface-hover rounded-xl">
+            <div className="relative p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-gray-200 shadow-xl hover:border-gray-300 transition-all duration-500">
+              <div className="flex items-center justify-between mb-8 p-1 bg-gray-100 rounded-xl border border-gray-200">
                 <button
                   onClick={() => { setIsLogin(true); setError(''); setSuccess(''); setFieldErrors({}); }}
-                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:scale-[1.02] ${isLogin ? 'bg-white/10 text-white shadow-lg shadow-primary/10' : 'text-gray-200 hover:text-white hover:bg-white/5'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${isLogin ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => { setIsLogin(false); setError(''); setSuccess(''); setFieldErrors({}); }}
-                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:scale-[1.02] ${!isLogin ? 'bg-white/10 text-white shadow-lg shadow-primary/10' : 'text-gray-200 hover:text-white hover:bg-white/5'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${!isLogin ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
                 >
                   Register
                 </button>
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-display font-bold text-white mb-2">
+                <h2 className="text-2xl font-display font-bold text-gray-900 mb-2">
                   {isLogin ? 'Welcome back' : 'Create your vault'}
                 </h2>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-600">
                   {isLogin ? 'Enter your credentials to access your memory.' : 'Start capturing your thoughts today.'}
                 </p>
               </div>
 
               <form className="space-y-4" onSubmit={handleSubmit}>
-                {error && <div className="text-red-400 text-sm break-words">{error}</div>}
-                {success && <div className="text-green-400 text-sm break-words">{success}</div>}
+                {error && <div className="text-red-600 text-sm break-words">{error}</div>}
+                {success && <div className="text-green-600 text-sm break-words">{success}</div>}
 
                 <Input
                   type="text"
@@ -317,8 +277,8 @@ const AuthLanding = () => {
 
                 {isLogin && (
                   <div className="flex items-center gap-2 mt-2">
-                    <input type="checkbox" id="remember" className="rounded border-gray-600 bg-surface text-primary focus:ring-primary focus:ring-offset-background" />
-                    <label htmlFor="remember" className="text-xs text-gray-400 cursor-pointer">Remember me for 30 days</label>
+                    <input type="checkbox" id="remember" className="rounded border-gray-300 bg-white text-primary focus:ring-primary focus:ring-offset-gray-100" />
+                    <label htmlFor="remember" className="text-xs text-gray-600 cursor-pointer">Remember me for 30 days</label>
                   </div>
                 )}
 
@@ -330,10 +290,10 @@ const AuthLanding = () => {
 
               <div className="mt-8 relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-3 py-1 rounded-full bg-[#0a0d1d]/90 border border-white/5 text-gray-300 backdrop-blur-sm">
+                  <span className="px-3 py-1 rounded-full bg-white border border-gray-200 text-gray-600">
                     Or continue with
                   </span>
                 </div>
@@ -348,11 +308,11 @@ const AuthLanding = () => {
                * text/icon squash or overflow.
                */}
               <div className="mt-6 grid grid-cols-1 min-[400px]:grid-cols-2 gap-3">
-                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-surface border border-border hover:bg-surface-hover hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-white hover:shadow-lg hover:shadow-primary/10">
+                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-gray-700 hover:shadow-sm">
                   <GoogleIcon />
                   Google
                 </button>
-                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-surface border border-border hover:bg-surface-hover hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-white hover:shadow-lg hover:shadow-primary/10">
+                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-gray-700 hover:shadow-sm">
                   <GithubIcon />
                   GitHub
                 </button>

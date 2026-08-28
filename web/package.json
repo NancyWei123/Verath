@@ -3,12 +3,17 @@
   "version": "3.0.0",
   "description": "Verath web client — React auth shell and legacy dashboard",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": ["verath", "memory", "ai"],
+  "keywords": [
+    "verath",
+    "memory",
+    "ai"
+  ],
   "license": "MIT",
   "dependencies": {
     "framer-motion": "^13.1.1",
@@ -20,7 +25,7 @@
     "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.5.2",
     "postcss": "^8.5.23",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^3.4.0",
     "vite": "^8.2.1"
   }
 }

@@ -14,13 +14,13 @@ const Input = forwardRef(({
   return (
     <div className="space-y-1">
       {label && (
-        <label className="text-xs font-medium text-gray-300 ml-1">
+        <label className="text-xs font-medium text-gray-700 ml-1">
           {label}
         </label>
       )}
       <div className="relative">
         {Icon && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         )}
         <input
           ref={ref}
@@ -34,7 +34,7 @@ const Input = forwardRef(({
         />
       </div>
       {error && (
-        <p className="text-xs text-red-400 ml-1">{error}</p>
+        <p className="text-xs text-red-600 ml-1">{error}</p>
       )}
     </div>
   );

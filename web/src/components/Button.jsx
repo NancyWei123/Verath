@@ -13,8 +13,8 @@ const Button = ({
   
   const variants = {
     primary: "bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_16px_rgba(139,92,246,0.22)] hover:-translate-y-0.5",
-    secondary: "bg-surface border border-border text-white hover:bg-surface-hover hover:border-primary/30 hover:-translate-y-0.5",
-    ghost: "text-gray-400 hover:text-white hover:bg-white/5",
+    secondary: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:-translate-y-0.5",
+    ghost: "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
   };
 
   return (

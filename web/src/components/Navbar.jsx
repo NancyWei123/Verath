@@ -41,7 +41,7 @@ const Navbar = () => {
                 <div
                     className={`flex items-center justify-between rounded-2xl border transition-all duration-500
                     ${isScrolled
-                            ? "bg-black/40 backdrop-blur-2xl border-white/10 shadow-2xl shadow-purple-500/10 px-6 py-3"
+                            ? "bg-white/95 backdrop-blur-xl border-gray-200 shadow-lg px-6 py-3"
                             : "bg-transparent border-transparent px-2 py-2"
                         }`}
                 >
@@ -61,7 +61,7 @@ const Navbar = () => {
                             </div>
                         </div>
 
-                        <span className="text-white font-semibold text-xl tracking-tight">
+                        <span className="text-gray-900 font-semibold text-xl tracking-tight">
                             Verath
                         </span>
                     </motion.div>
@@ -73,7 +73,7 @@ const Navbar = () => {
                                 key={index}
                                 href={link.href}
                                 whileHover={{ y: -2 }}
-                                className="relative text-sm text-gray-300 hover:text-white transition-colors duration-300 group"
+                                className="relative text-sm text-gray-600 hover:text-gray-900 transition-colors duration-300 group"
                             >
                                 {link.label}
 
@@ -102,7 +102,7 @@ const Navbar = () => {
 
                     {/* Mobile Button */}
                     <button
-                        className="md:hidden text-gray-300 hover:text-white transition-colors"
+                        className="md:hidden text-gray-600 hover:text-gray-900 transition-colors"
                         onClick={() =>
                             setIsMobileMenuOpen(!isMobileMenuOpen)
                         }
@@ -123,7 +123,7 @@ const Navbar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.25 }}
-                            className="md:hidden mt-4 rounded-2xl border border-white/10 bg-black/50 backdrop-blur-2xl p-6 shadow-2xl"
+                            className="md:hidden mt-4 rounded-2xl border border-gray-200 bg-white/95 backdrop-blur-xl p-6 shadow-lg"
                         >
                             <div className="flex flex-col gap-5">
                                 {navLinks.map((link, index) => (
@@ -133,7 +133,7 @@ const Navbar = () => {
                                         onClick={() =>
                                             setIsMobileMenuOpen(false)
                                         }
-                                        className="text-gray-300 hover:text-white transition-colors duration-300"
+                                        className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
                                     >
                                         {link.label}
                                     </a>

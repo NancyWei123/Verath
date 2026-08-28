@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-white overflow-x-hidden antialiased;
+    @apply bg-white text-gray-900 overflow-x-hidden antialiased;
   }
 
   /* Prevent all direct children from busting the viewport */
@@ -15,31 +15,26 @@
   }
 }
 
-/* Custom background mesh */
+/* Custom background mesh - disabled for light theme */
 .bg-mesh {
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.1) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(79, 70, 229, 0.1) 0px, transparent 50%);
+  background-image: none;
 }
 
 .glass-card {
-  @apply bg-surface/80 backdrop-blur-2xl border border-white/10 shadow-2xl transition-all duration-300;
+  @apply bg-white/80 backdrop-blur-xl border border-gray-200 shadow-lg transition-all duration-300;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .input-field {
   /* min-w-0 prevents flex children from overflowing their container */
-  @apply w-full min-w-0 bg-surface-hover/80 border border-border rounded-xl pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40 transition-all duration-300;
-  backdrop-filter: blur(12px);
+  @apply w-full min-w-0 bg-white border border-gray-300 rounded-xl pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300;
 }
 
 .input-field:hover {
-  border-color: rgba(139, 92, 246, 0.35);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(255, 255, 255, 0.98);
 }
 
 .btn-primary {
@@ -54,14 +49,9 @@
     0 0 18px rgba(139, 92, 246, 0.25);
 }
 
-/* Smooth noise overlay */
+/* Smooth noise overlay - disabled for light theme */
 .bg-noise {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.03;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  display: none;
 }
 
 /* ─── Responsive overflow fixes ────────────────────────────────────────────── */
@@ -72,4 +62,26 @@
     font-size: clamp(2rem, 10vw, 3rem);
     line-height: 1.1;
   }
+}
+
+/* Enhanced animations and transitions */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improved button hover effects */
+button {
+  will-change: transform;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button, input {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better focus states for accessibility */
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.5);
+  outline-offset: 2px;
 }
