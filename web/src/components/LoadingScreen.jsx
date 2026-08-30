@@ -5,6 +5,7 @@ const LoadingScreen = () => {
     const [msgIdx, setMsgIdx] = useState(0)
     const [phase, setPhase] = useState('loading')
     const [dots, setDots] = useState(0)
+    const [progress, setProgress] = useState(0)
     const canvasRef = useRef(null)
     const animRef = useRef(null)
 
@@ -16,6 +17,8 @@ const LoadingScreen = () => {
         'Syncing RAG pipeline',
         'Verath is ready',
     ]
+
+    const totalSteps = messages.length
 
     // ── same wave canvas from original ──────────────────────────────
     useEffect(() => {
@@ -30,10 +33,9 @@ const LoadingScreen = () => {
             const { width, height } = canvas
             ctx.clearRect(0, 0, width, height)
             const waves = [
-                { amp: 28, freq: 0.012, speed: 0.018, color: 'rgba(124,58,237,0.18)', offset: 0 },
-                { amp: 18, freq: 0.018, speed: 0.026, color: 'rgba(99,102,241,0.14)', offset: 1.2 },
-                { amp: 38, freq: 0.008, speed: 0.011, color: 'rgba(139,92,246,0.09)', offset: 2.4 },
-                { amp: 12, freq: 0.025, speed: 0.034, color: 'rgba(167,139,250,0.12)', offset: 0.7 },
+                { amp: 20, freq: 0.015, speed: 0.012, color: 'rgba(124,58,237,0.08)', offset: 0 },
+                { amp: 15, freq: 0.020, speed: 0.018, color: 'rgba(99,102,241,0.06)', offset: 1.5 },
+                { amp: 25, freq: 0.010, speed: 0.008, color: 'rgba(139,92,246,0.05)', offset: 3.0 },
             ]
             waves.forEach(w => {
                 ctx.beginPath()
@@ -45,12 +47,12 @@ const LoadingScreen = () => {
                 }
                 ctx.strokeStyle = w.color; ctx.lineWidth = 1.5; ctx.stroke()
             })
-            const scanX = (t * 1.5) % width
-            const grad = ctx.createLinearGradient(scanX - 40, 0, scanX + 40, 0)
+            const scanX = (t * 1.2) % width
+            const grad = ctx.createLinearGradient(scanX - 30, 0, scanX + 30, 0)
             grad.addColorStop(0, 'transparent')
-            grad.addColorStop(0.5, 'rgba(124,58,237,0.22)')
+            grad.addColorStop(0.5, 'rgba(124,58,237,0.08)')
             grad.addColorStop(1, 'transparent')
-            ctx.fillStyle = grad; ctx.fillRect(scanX - 40, 0, 80, height)
+            ctx.fillStyle = grad; ctx.fillRect(scanX - 30, 0, 60, height)
             t += 1
             animRef.current = requestAnimationFrame(draw)
         }
@@ -69,6 +71,7 @@ const LoadingScreen = () => {
                 }
                 return prev + 1
             })
+            setProgress(prev => Math.min(prev + 1, totalSteps))
         }, 520)
         return () => clearInterval(timer)
     }, [])
@@ -83,7 +86,7 @@ const LoadingScreen = () => {
 
     return (
         <div style={{
-            background: '#04060f',
+            background: '#ffffff',
             minHeight: '100dvh',
             width: '100%',
             display: 'flex',
@@ -94,43 +97,78 @@ const LoadingScreen = () => {
             position: 'fixed',
             inset: 0,
         }}>
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
-                @keyframes glowPulse {
-                    0%,100% { text-shadow: 0 0 24px rgba(139,92,246,0.45), 0 0 64px rgba(124,58,237,0.18); }
-                    50%      { text-shadow: 0 0 48px rgba(139,92,246,0.9), 0 0 120px rgba(124,58,237,0.4); }
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+                @keyframes subtleGlow {
+                    0%,100% { opacity: 0.4; }
+                    50% { opacity: 0.8; }
                 }
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
+                @keyframes verticalPulse {
+                    0%,100% { 
+                        box-shadow: 0 0 30px 10px rgba(139,92,246,0.08);
+                        opacity: 0.6;
+                    }
+                    50% { 
+                        box-shadow: 0 0 50px 20px rgba(139,92,246,0.12);
+                        opacity: 0.8;
+                    }
                 }
-                @keyframes ripple {
-                    0%   { transform: scale(0.85); opacity: 0.7; }
-                    100% { transform: scale(2.2);  opacity: 0; }
-                }
-            `}</style>
+                @keyframes waveMove {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }`}</style>
 
-            {/* ── background: same as original ── */}
+            {/* Subtle grid background */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                backgroundImage: 'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+            }} />
+
+            {/* Subtle purple vertical glow */}
+            <div style={{
+                position: 'absolute',
+                left: '50%',
+                top: '20%',
+                bottom: '20%',
+                width: '2px',
+                transform: 'translateX(-50%)',
+                background: 'linear-gradient(to bottom, transparent, rgba(139,92,246,0.15), transparent)',
+                animation: 'verticalPulse 4s ease-in-out infinite',
+                pointerEvents: 'none',
+            }} />
+
+            {/* Horizontal wavy lines */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                overflow: 'hidden',
+            }}>
+                {[0, 1, 2].map((i) => (
+                    <div
+                        key={i}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            right: 0,
+                            height: '1px',
+                            top: `${30 + i * 15}%`,
+                            background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.08), transparent)',
+                            animation: `waveMove ${8 + i * 2}s linear infinite`,
+                            animationDelay: `${i * 0.5}s`,
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Canvas waves */}
             <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
 
-            {/* Glowing grid squares */}
+            {/* Vignette effect */}
             <div style={{
                 position: 'absolute', inset: 0, pointerEvents: 'none',
-                backgroundImage: `
-                    linear-gradient(rgba(99,102,241,0.08) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(99,102,241,0.08) 1px, transparent 1px)
-                `,
-                backgroundSize: '52px 52px',
+                background: 'radial-gradient(ellipse 70% 60% at 50% 50%, transparent 30%, rgba(0,0,0,0.03) 100%)',
             }} />
-            {/* Center glow over grid */}
-            <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none',
-                background: 'radial-gradient(ellipse 50% 40% at 50% 50%, rgba(88,60,210,0.15) 0%, transparent 70%)',
-            }} />
-
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, #04060f 100%)' }} />
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '30%', pointerEvents: 'none', background: 'linear-gradient(to bottom, #04060f, transparent)' }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', pointerEvents: 'none', background: 'linear-gradient(to top, #04060f, transparent)' }} />
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '80vw', height: '40vh', background: 'radial-gradient(ellipse, rgba(99,58,210,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
             {/* ── main content ── */}
             <div style={{
@@ -139,123 +177,102 @@ const LoadingScreen = () => {
                 width: '100%', padding: '0 28px', boxSizing: 'border-box', gap: 0,
             }}>
 
-                {/* Logo spinner ring */}
+                {/* Logo - V in rounded square */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ position: 'relative', width: 88, height: 88, marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    {/* Ripple rings */}
-                    {[0, 1].map(i => (
-                        <div key={i} style={{
-                            position: 'absolute', inset: 0, borderRadius: '50%',
-                            border: '1px solid rgba(124,58,237,0.35)',
-                            animation: `ripple 2.4s ease-out infinite`,
-                            animationDelay: `${i * 1.2}s`,
-                        }} />
-                    ))}
-
-                    {/* Spinning arc */}
-                    <svg width="88" height="88" viewBox="0 0 88 88" fill="none"
-                        style={{ position: 'absolute', inset: 0, animation: 'spin 2s linear infinite' }}>
-                        <circle cx="44" cy="44" r="40"
-                            stroke="url(#arcGrad)" strokeWidth="1.5"
-                            strokeDasharray="60 192" strokeLinecap="round" />
-                        <defs>
-                            <linearGradient id="arcGrad" x1="0" y1="0" x2="88" y2="88" gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stopColor="#a78bfa" />
-                                <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-
-                    {/* Counter-spin slower arc */}
-                    <svg width="66" height="66" viewBox="0 0 66 66" fill="none"
-                        style={{ position: 'absolute', animation: 'spin 3.5s linear infinite reverse' }}>
-                        <circle cx="33" cy="33" r="29"
-                            stroke="rgba(99,102,241,0.4)" strokeWidth="1"
-                            strokeDasharray="30 152" strokeLinecap="round" />
-                    </svg>
-
-                    {/* Core badge */}
-                    <div style={{
-                        width: 48, height: 48, borderRadius: 14,
-                        background: 'linear-gradient(135deg, #5b21b6 0%, #4f46e5 100%)',
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ 
+                        width: 72, 
+                        height: 72, 
+                        borderRadius: 18,
+                        background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        boxShadow: '0 0 0 1px rgba(124,58,237,0.5), 0 8px 32px rgba(79,70,229,0.4)',
-                        position: 'relative', zIndex: 2,
-                    }}>
-                        <span style={{
-                            fontFamily: "'Outfit', sans-serif",
-                            fontWeight: 900, fontSize: 22, color: '#fff', letterSpacing: '-1px',
-                        }}>V</span>
-                    </div>
+                        marginBottom: '1.5rem',
+                        boxShadow: '0 8px 32px rgba(124,58,237,0.15), 0 0 0 1px rgba(139,92,246,0.1)',
+                    }}
+                >
+                    <span style={{
+                        fontFamily: "Syne, sans-serif",
+                        fontWeight: 800, 
+                        fontSize: 36, 
+                        color: '#fff', 
+                        letterSpacing: '-2px',
+                    }}>V</span>
                 </motion.div>
 
                 {/* Wordmark */}
                 <motion.div
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ textAlign: 'center', marginBottom: '2.5rem' }}
+                    transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ textAlign: 'center', marginBottom: '3rem' }}
                 >
                     <div style={{
-                        fontFamily: "'Outfit', sans-serif",
-                        fontWeight: 900,
-                        fontSize: 'clamp(44px, 14vw, 72px)',
-                        color: '#fff',
-                        letterSpacing: '-4px',
-                        lineHeight: 1,
-                        animation: 'glowPulse 3s ease-in-out infinite',
+                        fontFamily: "Syne, sans-serif",
+                        fontWeight: 700,
+                        fontSize: 'clamp(36px, 10vw, 56px)',
+                        color: '#1a1a1a',
+                        letterSpacing: '-2px',
+                        lineHeight: 1.1,
                     }}>Verath</div>
                     <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 'clamp(8px, 2.2vw, 10px)',
-                        color: 'rgba(139,92,246,0.5)',
-                        letterSpacing: '5px',
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: 'clamp(10px, 2.5vw, 12px)',
+                        color: 'rgba(0,0,0,0.5)',
+                        letterSpacing: '4px',
                         textTransform: 'uppercase',
-                        marginTop: 8,
-                    }}>AI · Memory · Platform</div>
+                        marginTop: 12,
+                        fontWeight: 400,
+                    }}>AI - Memory - Platform</div>
                 </motion.div>
 
-                {/* Animated status message */}
+                {/* Loading status */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.35 }}
+                    transition={{ delay: 0.25 }}
                     style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20,
-                        width: '100%', maxWidth: 340,
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
+                        width: '100%', maxWidth: 320,
                     }}
                 >
                     {/* Message */}
                     <div style={{
-                        height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         overflow: 'hidden',
                     }}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={msgIdx}
-                                initial={{ opacity: 0, y: 8 }}
+                                initial={{ opacity: 0, y: 6 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -8 }}
-                                transition={{ duration: 0.22 }}
+                                exit={{ opacity: 0, y: -6 }}
+                                transition={{ duration: 0.2 }}
                                 style={{
-                                    fontFamily: "'JetBrains Mono', monospace",
-                                    fontSize: 'clamp(10px, 3vw, 12px)',
-                                    color: isLast ? 'rgba(34,197,94,0.85)' : 'rgba(255,255,255,0.38)',
-                                    letterSpacing: '0.3px',
-                                    display: 'flex', alignItems: 'center', gap: 4,
+                                    fontFamily: "Inter, sans-serif",
+                                    fontSize: 'clamp(11px, 3vw, 13px)',
+                                    color: isLast ? 'rgba(22,163,74,0.9)' : 'rgba(0,0,0,0.6)',
+                                    letterSpacing: '0.5px',
+                                    display: 'flex', alignItems: 'center', gap: 6,
                                     whiteSpace: 'nowrap',
+                                    fontWeight: 400,
                                 }}
                             >
-                                <span style={{ color: isLast ? 'rgba(34,197,94,0.7)' : 'rgba(124,58,237,0.65)' }}>
-                                    {isLast ? '✓' : '▶'}
+                                <span style={{ 
+                                    color: isLast ? 'rgba(22,163,74,0.8)' : 'rgba(139,92,246,0.8)',
+                                    fontSize: 'clamp(10px, 2.5vw, 12px)',
+                                }}>
+                                    {isLast ? '✓' : '⟳'}
                                 </span>
                                 {messages[msgIdx]}
                                 {!isLast && (
-                                    <span style={{ color: 'rgba(139,92,246,0.6)', minWidth: 18, display: 'inline-block' }}>
+                                    <span style={{ 
+                                        color: 'rgba(139,92,246,0.6)', 
+                                        minWidth: 16, 
+                                        display: 'inline-block',
+                                        animation: 'subtleGlow 1.5s ease-in-out infinite',
+                                    }}>
                                         {'.'.repeat(dots)}
                                     </span>
                                 )}
@@ -263,42 +280,35 @@ const LoadingScreen = () => {
                         </AnimatePresence>
                     </div>
 
-                    {/* Step pills */}
-                    <div style={{ display: 'flex', gap: 5, width: '100%' }}>
-                        {messages.map((_, i) => {
-                            const active = i === msgIdx
-                            const done = i < msgIdx
-                            return (
-                                <motion.div
-                                    key={i}
-                                    animate={{
-                                        opacity: done ? 1 : active ? 0.9 : 0.18,
-                                        scaleY: active ? 1.8 : 1,
-                                    }}
-                                    transition={{ duration: 0.35 }}
-                                    style={{
-                                        flex: 1, height: 3, borderRadius: 2,
-                                        background: done
-                                            ? 'linear-gradient(90deg, #7c3aed, #a78bfa)'
-                                            : active
-                                                ? '#c4b5fd'
-                                                : 'rgba(255,255,255,0.1)',
-                                        boxShadow: active ? '0 0 10px rgba(196,181,253,0.7)' : done ? '0 0 6px rgba(124,58,237,0.4)' : 'none',
-                                        transformOrigin: 'center',
-                                    }}
-                                />
-                            )
-                        })}
+                    {/* Progress bar */}
+                    <div style={{ 
+                        width: '100%', 
+                        height: 2, 
+                        background: 'rgba(0,0,0,0.1)', 
+                        borderRadius: 1,
+                        overflow: 'hidden',
+                    }}>
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${(progress / totalSteps) * 100}%` }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                                height: '100%',
+                                background: 'linear-gradient(90deg, #7c3aed, #a78bfa)',
+                                borderRadius: 1,
+                            }}
+                        />
                     </div>
 
-                    {/* Step counter */}
+                    {/* Progress counter */}
                     <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 'clamp(9px, 2.5vw, 10px)',
-                        color: 'rgba(255,255,255,0.18)',
-                        letterSpacing: '2px',
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: 'clamp(10px, 2.5vw, 11px)',
+                        color: 'rgba(0,0,0,0.4)',
+                        letterSpacing: '1px',
+                        fontWeight: 500,
                     }}>
-                        {String(msgIdx + 1).padStart(2, '0')} / {String(messages.length).padStart(2, '0')}
+                        {String(progress).padStart(2, '0')} / {String(totalSteps).padStart(2, '0')}
                     </div>
                 </motion.div>
 
