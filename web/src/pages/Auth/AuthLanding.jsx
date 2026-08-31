@@ -122,7 +122,7 @@ const AuthLanding = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white overflow-x-hidden font-sans">
+    <div className="relative min-h-screen bg-white overflow-x-hidden font-sans w-full flex flex-col">
       <Navbar />
 
 
@@ -136,16 +136,16 @@ const AuthLanding = () => {
        * FIX: Outer padding changed from `px-6` to `px-4 sm:px-6` to give
        * 320px-wide devices (iPhone SE) slightly more horizontal breathing room.
        */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-20 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-8 sm:pb-12 lg:pb-20 lg:px-12 flex flex-col lg:grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-start lg:items-center">
 
-        {/* Left Section */}
+        {/* Left Section - Hero Content */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col space-y-10 min-w-0"
+          className="flex flex-col space-y-4 sm:space-y-6 lg:space-y-10 min-w-0 order-2 lg:order-1 mt-4 sm:mt-8 lg:mt-0 relative z-0"
         >
-          <div className="space-y-6 min-w-0">
+          <div className="space-y-4 lg:space-y-6 min-w-0">
             <AnimatedHeading
               text="Your intelligent digital memory."
               /*
@@ -154,7 +154,7 @@ const AuthLanding = () => {
                * `text-5xl` (3rem / 48px) overflowed the column. `text-4xl`
                * (2.25rem) fits comfortably on the smallest common viewport.
                */
-              className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold tracking-tight text-gray-900"
+              className="text-3xl sm:text-4xl lg:text-7xl font-display font-bold tracking-tight text-gray-900"
             />
             <AnimatedSubtitle
               text="Capture conversations, thoughts, meetings, and ideas — then retrieve them instantly using AI-powered semantic memory."
@@ -163,12 +163,12 @@ const AuthLanding = () => {
                * Tailwind's `break-words` class to prevent long words/URLs from
                * causing horizontal overflow on narrow viewports.
                */
-              className="text-lg text-gray-600 leading-relaxed max-w-xl break-words"
+              className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl break-words"
             />
           </div>
 
           {/* Features Grid — grid-cols-1 sm:grid-cols-2 already correct */}
-          <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-4">
             {[
               { icon: Brain, title: "AI Memory Extraction", desc: "Auto-detects intents & entities.", borderColor: "border-purple-500", iconColor: "text-purple-600", iconBg: "bg-purple-100" },
               { icon: Search, title: "Hybrid Semantic Search", desc: "Vector search + neural re-ranking.", borderColor: "border-blue-500", iconColor: "text-blue-600", iconBg: "bg-blue-100" },
@@ -178,28 +178,28 @@ const AuthLanding = () => {
               <motion.div
                 key={idx}
                 whileHover={{ y: -4, scale: 1.02 }}
-                className={`p-5 rounded-2xl bg-white border-2 ${feature.borderColor} group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-opacity-80 hover:shadow-xl`}
+                className={`p-3 sm:p-4 md:p-5 rounded-2xl bg-white border-2 ${feature.borderColor} group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-opacity-80 hover:shadow-xl hover:border-opacity-100`}
               >
-                <div className={`w-10 h-10 rounded-lg ${feature.iconBg} flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
-                  <feature.icon className={`w-5 h-5 ${feature.iconColor}`} />
+                <div className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-lg ${feature.iconBg} flex items-center justify-center mb-2 sm:mb-3 md:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
+                  <feature.icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${feature.iconColor}`} />
                 </div>
-                <h3 className="text-gray-900 font-medium mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.desc}</p>
+                <h3 className="text-gray-900 font-medium mb-1 text-xs sm:text-sm md:text-base">{feature.title}</h3>
+                <p className="text-xs sm:text-xs md:text-sm text-gray-600">{feature.desc}</p>
               </motion.div>
             ))}
           </motion.div>
 
           {/* Trusted By */}
-          <motion.div variants={itemVariants} className="flex gap-4 pt-4">
-            <div className="flex -space-x-3 flex-shrink-0">
+          <motion.div variants={itemVariants} className="hidden sm:flex gap-3 sm:gap-4 pt-2 sm:pt-4">
+            <div className="flex -space-x-2 sm:-space-x-3 flex-shrink-0">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
-                  <User className="w-4 h-4 text-gray-600" />
+                <div key={i} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
                 </div>
               ))}
             </div>
             <div className="flex flex-col justify-center min-w-0">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5 sm:gap-1">
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} />)}
               </div>
               <span className="text-xs text-gray-600 font-medium mt-1">Trusted by 10,000+ thinkers</span>
@@ -212,7 +212,7 @@ const AuthLanding = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex justify-center lg:justify-end"
+          className="flex justify-center lg:justify-end order-1 lg:order-2 w-full mb-0 lg:mb-0 relative z-20"
         >
           {/*
            * FIX: Auth card wrapper — `w-full max-w-md` is kept but the card now
@@ -220,35 +220,35 @@ const AuthLanding = () => {
            * `p-8` to `p-5 sm:p-8` so on 320px screens the form fields don't get
            * clipped or force horizontal scroll inside the card.
            */}
-          <div className="relative w-full max-w-md min-w-0">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-20"></div>
+          <div className="relative w-full max-w-sm sm:max-w-md min-w-0 px-1 sm:px-0">
+            <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 to-indigo-500 rounded-3xl blur opacity-25"></div>
 
-            <div className="relative p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-gray-200 shadow-xl hover:border-gray-300 transition-all duration-500">
-              <div className="flex items-center justify-between mb-8 p-1 bg-gray-100 rounded-xl border border-gray-200">
+            <div className="relative p-4 sm:p-6 md:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border-2 border-gray-200 shadow-2xl hover:border-gray-300 transition-all duration-500">
+              <div className="flex items-center justify-between mb-5 sm:mb-6 md:mb-8 p-1 bg-gray-100 rounded-xl border-2 border-gray-200">
                 <button
                   onClick={() => { setIsLogin(true); setError(''); setSuccess(''); setFieldErrors({}); }}
-                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${isLogin ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${isLogin ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => { setIsLogin(false); setError(''); setSuccess(''); setFieldErrors({}); }}
-                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${!isLogin ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${!isLogin ? 'bg-white text-gray-900 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
                 >
                   Register
                 </button>
               </div>
 
-              <div className="mb-8">
-                <h2 className="text-2xl font-display font-bold text-gray-900 mb-2">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-gray-900 mb-2">
                   {isLogin ? 'Welcome back' : 'Create your vault'}
                 </h2>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs sm:text-sm text-gray-600">
                   {isLogin ? 'Enter your credentials to access your memory.' : 'Start capturing your thoughts today.'}
                 </p>
               </div>
 
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
                 {error && <div className="text-red-600 text-sm break-words">{error}</div>}
                 {success && <div className="text-green-600 text-sm break-words">{success}</div>}
 
@@ -288,7 +288,7 @@ const AuthLanding = () => {
                 </Button>
               </form>
 
-              <div className="mt-8 relative">
+              <div className="mt-6 sm:mt-8 relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
@@ -307,12 +307,12 @@ const AuthLanding = () => {
                * (tight phones) each button gets its own row and there's no
                * text/icon squash or overflow.
                */}
-              <div className="mt-6 grid grid-cols-1 min-[400px]:grid-cols-2 gap-3">
-                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-gray-700 hover:shadow-sm">
+              <div className="mt-4 sm:mt-6 grid grid-cols-1 min-[400px]:grid-cols-2 gap-2 sm:gap-3">
+                <button className="flex items-center justify-center gap-2 py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-xs sm:text-sm font-medium text-gray-700 hover:shadow-sm">
                   <GoogleIcon />
                   Google
                 </button>
-                <button className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-sm font-medium text-gray-700 hover:shadow-sm">
+                <button className="flex items-center justify-center gap-2 py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-xs sm:text-sm font-medium text-gray-700 hover:shadow-sm">
                   <GithubIcon />
                   GitHub
                 </button>

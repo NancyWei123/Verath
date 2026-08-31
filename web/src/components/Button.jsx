@@ -9,7 +9,7 @@ const Button = ({
   loading = false,
   className = '' 
 }) => {
-  const base = "flex items-center justify-center gap-2 w-full py-3 px-6 rounded-xl font-medium text-sm transition-all duration-300 disabled:opacity-50";
+  const base = "flex items-center justify-center gap-2 w-full py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 md:px-6 rounded-xl font-medium text-xs sm:text-sm transition-all duration-300 disabled:opacity-50";
   
   const variants = {
     primary: "bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_16px_rgba(139,92,246,0.22)] hover:-translate-y-0.5",

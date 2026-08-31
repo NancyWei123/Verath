@@ -31,37 +31,37 @@ const Navbar = () => {
             transition={{ duration: 0.6 }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
             ${isScrolled
-                    ? "py-3"
-                    : "py-5"
+                    ? "py-2 sm:py-3"
+                    : "py-3 sm:py-5"
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-6 lg:px-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
 
                 {/* Navbar Container */}
                 <div
                     className={`flex items-center justify-between rounded-2xl border transition-all duration-500
                     ${isScrolled
-                            ? "bg-white/95 backdrop-blur-xl border-gray-200 shadow-lg px-6 py-3"
-                            : "bg-transparent border-transparent px-2 py-2"
+                            ? "bg-white/95 backdrop-blur-xl border-gray-200 shadow-lg px-4 sm:px-6 py-3"
+                            : "bg-white/90 backdrop-blur-md border-gray-200/50 shadow-sm px-3 sm:px-4 py-3"
                         }`}
                 >
 
                     {/* Logo */}
                     <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className="flex items-center gap-3 cursor-pointer"
+                        className="flex items-center gap-2 sm:gap-3 cursor-pointer"
                     >
                         <div className="relative">
                             <div className="absolute inset-0 bg-purple-500 blur-xl opacity-50" />
 
-                            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
-                                <span className="text-white font-bold text-lg">
+                            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                                <span className="text-white font-bold text-sm sm:text-lg">
                                     V
                                 </span>
                             </div>
                         </div>
 
-                        <span className="text-gray-900 font-semibold text-xl tracking-tight">
+                        <span className="text-gray-900 font-semibold text-lg sm:text-xl tracking-tight">
                             Verath
                         </span>
                     </motion.div>
@@ -123,9 +123,12 @@ const Navbar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.25 }}
-                            className="md:hidden mt-4 rounded-2xl border border-gray-200 bg-white/95 backdrop-blur-xl p-6 shadow-lg"
+                            className="md:hidden mt-4 rounded-2xl border-2 border-gray-200 bg-white/95 backdrop-blur-xl p-5 shadow-lg"
                         >
-                            <div className="flex flex-col gap-5">
+                            <div className="flex flex-col gap-4">
+                                <button className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-medium shadow-lg shadow-violet-500/20">
+                                    Get Started
+                                </button>
                                 {navLinks.map((link, index) => (
                                     <a
                                         key={index}
@@ -133,15 +136,11 @@ const Navbar = () => {
                                         onClick={() =>
                                             setIsMobileMenuOpen(false)
                                         }
-                                        className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
+                                        className="text-gray-600 hover:text-gray-900 transition-colors duration-300 text-center py-2"
                                     >
                                         {link.label}
                                     </a>
                                 ))}
-
-                                <button className="mt-2 w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-medium shadow-lg shadow-violet-500/20">
-                                    Get Started
-                                </button>
                             </div>
                         </motion.div>
                     )}
