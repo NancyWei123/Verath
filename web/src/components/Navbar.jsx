@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ onOpenDocs, onGetStarted }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -20,16 +20,33 @@ const Navbar = () => {
 
     const navLinks = [
         { label: "Features", href: "#features" },
+        { label: "How it works", href: "#how-it-works" },
+        { label: "Docs", href: "#docs", onClick: onOpenDocs },
         { label: "About", href: "#about" },
-        { label: "Docs", href: "#docs" },
+        { label: "Blog", href: "#blog" },
+        { label: "Contact", href: "#contact" },
     ];
+
+    const handleLinkClick = (e, link) => {
+        if (link.onClick) {
+            e.preventDefault();
+            link.onClick();
+        } else if (link.href.startsWith("#")) {
+            const el = document.querySelector(link.href);
+            if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+        setIsMobileMenuOpen(false);
+    };
 
     return (
         <motion.nav
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
+            className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500
             ${isScrolled
                     ? "py-2 sm:py-3"
                     : "py-3 sm:py-5"
@@ -49,6 +66,7 @@ const Navbar = () => {
                     {/* Logo */}
                     <motion.div
                         whileHover={{ scale: 1.05 }}
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         className="flex items-center gap-2 sm:gap-3 cursor-pointer"
                     >
                         <div className="relative">
@@ -67,16 +85,16 @@ const Navbar = () => {
                     </motion.div>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-10">
+                    <div className="hidden md:flex items-center gap-6 lg:gap-8">
                         {navLinks.map((link, index) => (
                             <motion.a
                                 key={index}
                                 href={link.href}
+                                onClick={(e) => handleLinkClick(e, link)}
                                 whileHover={{ y: -2 }}
-                                className="relative text-sm text-gray-600 hover:text-gray-900 transition-colors duration-300 group"
+                                className="relative text-sm text-gray-600 hover:text-gray-900 transition-colors duration-300 group cursor-pointer"
                             >
                                 {link.label}
-
                                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-violet-500 to-indigo-500 transition-all duration-300 group-hover:w-full" />
                             </motion.a>
                         ))}
@@ -85,6 +103,7 @@ const Navbar = () => {
                     {/* CTA */}
                     <div className="hidden md:flex items-center">
                         <motion.button
+                            onClick={onGetStarted}
                             whileHover={{
                                 scale: 1.05,
                                 boxShadow: "0px 0px 25px rgba(139,92,246,0.5)",
@@ -95,7 +114,6 @@ const Navbar = () => {
                             <span className="relative z-10">
                                 Get Started
                             </span>
-
                             <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-white/10" />
                         </motion.button>
                     </div>
@@ -125,18 +143,19 @@ const Navbar = () => {
                             transition={{ duration: 0.25 }}
                             className="md:hidden mt-4 rounded-2xl border-2 border-gray-200 bg-white/95 backdrop-blur-xl p-5 shadow-lg"
                         >
-                            <div className="flex flex-col gap-4">
-                                <button className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-medium shadow-lg shadow-violet-500/20">
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={() => { setIsMobileMenuOpen(false); if (onGetStarted) onGetStarted(); }}
+                                    className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-medium shadow-lg shadow-violet-500/20"
+                                >
                                     Get Started
                                 </button>
                                 {navLinks.map((link, index) => (
                                     <a
                                         key={index}
                                         href={link.href}
-                                        onClick={() =>
-                                            setIsMobileMenuOpen(false)
-                                        }
-                                        className="text-gray-600 hover:text-gray-900 transition-colors duration-300 text-center py-2"
+                                        onClick={(e) => handleLinkClick(e, link)}
+                                        className="text-gray-600 hover:text-gray-900 transition-colors duration-300 text-center py-2 font-medium text-sm"
                                     >
                                         {link.label}
                                     </a>

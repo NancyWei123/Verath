@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verath | Redirecting...</title>
+  <script>
+    // Preserve URL hash (e.g. #features, #how-it-works, #docs, #about, #contact) and redirect to main React application
+    const targetHash = window.location.hash || '';
+    window.location.href = '/' + targetHash;
+  </script>
+</head>
+<body>
+  <div style="font-family: system-ui, sans-serif; display: flex; height: 100vh; items-center; justify-content: center; background: #fafafa; color: #333;">
+    <p>Redirecting to Verath Digital Memory...</p>
+  </div>
+</body>
+</html>

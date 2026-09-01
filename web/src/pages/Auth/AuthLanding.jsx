@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { validateAuthForm } from '../../utils/validation';
 import { motion } from 'framer-motion';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import FeaturesSection from '../../components/FeaturesSection';
+import HowItWorksSection from '../../components/HowItWorksSection';
+import AboutSection from '../../components/AboutSection';
+import BlogSection from '../../components/BlogSection';
+import ContactSection from '../../components/ContactSection';
+import DocsModal from '../../components/DocsModal';
+import DiscordModal from '../../components/DiscordModal';
+import LegalModal from '../../components/LegalModal';
 import {
   Brain,
   Search,
@@ -16,31 +24,24 @@ import {
 } from 'lucide-react';
 
 const AnimatedHeading = ({ text, className }) => {
-  const words = text.split(' ')
+  const words = text.split(' ');
   const container = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.11, delayChildren: 0.3 } }
-  }
+  };
   const word = {
     hidden: { y: 52, opacity: 0, rotateX: -28 },
     visible: {
       y: 0, opacity: 1, rotateX: 0,
       transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
     }
-  }
+  };
   return (
     <motion.h1
       variants={container}
       initial="hidden"
       animate="visible"
       className={className}
-      /*
-       * FIX: Added `min-w-0` and `overflow-hidden` via style, and changed
-       * gap/flexWrap approach so words break safely on narrow viewports.
-       * The original `gap: '0 0.28em'` was fine but combined with
-       * `text-5xl` on 320px viewports the heading overflowed the column.
-       * The heading size is now clamped in index.css via media query.
-       */
       style={{ perspective: 800, display: 'flex', flexWrap: 'wrap', gap: '0 0.28em', lineHeight: 1.1, minWidth: 0 }}
     >
       {words.map((w, i) => (
@@ -49,8 +50,8 @@ const AnimatedHeading = ({ text, className }) => {
         </span>
       ))}
     </motion.h1>
-  )
-}
+  );
+};
 
 const AnimatedSubtitle = ({ text, className }) => (
   <motion.p
@@ -61,7 +62,7 @@ const AnimatedSubtitle = ({ text, className }) => (
   >
     {text}
   </motion.p>
-)
+);
 
 const AuthLanding = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -72,9 +73,41 @@ const AuthLanding = () => {
   const [success, setSuccess] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
+  // Modals state
+  const [isDocsOpen, setIsDocsOpen] = useState(false);
+  const [isDiscordOpen, setIsDiscordOpen] = useState(false);
+  const [legalModalType, setLegalModalType] = useState(null); // 'privacy' | 'terms' | null
+
+  const authCardRef = useRef(null);
+
   const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || !window.location.hostname
-    ? "http://127.0.0.1:8000"
+    ? "" // Use Vite proxy in development
     : `${window.location.protocol}//${window.location.hostname}:8000`;
+
+  // Listen to URL hashes on load and hashchange
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#docs') {
+        setIsDocsOpen(true);
+      } else if (hash === '#discord') {
+        setIsDiscordOpen(true);
+      } else if (hash === '#privacy') {
+        setLegalModalType('privacy');
+      } else if (hash === '#terms') {
+        setLegalModalType('terms');
+      } else if (hash) {
+        const el = document.querySelector(hash);
+        if (el) {
+          setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+        }
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,21 +154,21 @@ const AuthLanding = () => {
     visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
+  const scrollToAuth = () => {
+    if (authCardRef.current) {
+      authCardRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-white overflow-x-hidden font-sans w-full flex flex-col">
-      <Navbar />
+      {/* Navigation */}
+      <Navbar
+        onOpenDocs={() => setIsDocsOpen(true)}
+        onGetStarted={scrollToAuth}
+      />
 
-
-
-      {/*
-       * FIX: Main grid gap reduced from `gap-12 lg:gap-16` to `gap-8 lg:gap-16`.
-       * On single-column mobile layouts the 3rem gap wasted significant vertical
-       * space and combined with section paddings pushed content off-screen on
-       * shorter devices. `gap-8` (2rem) is more appropriate for stacked sections.
-       *
-       * FIX: Outer padding changed from `px-6` to `px-4 sm:px-6` to give
-       * 320px-wide devices (iPhone SE) slightly more horizontal breathing room.
-       */}
+      {/* Hero Section */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-8 sm:pb-12 lg:pb-20 lg:px-12 flex flex-col lg:grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-start lg:items-center">
 
         {/* Left Section - Hero Content */}
@@ -148,26 +181,15 @@ const AuthLanding = () => {
           <div className="space-y-4 lg:space-y-6 min-w-0">
             <AnimatedHeading
               text="Your intelligent digital memory."
-              /*
-               * FIX: Heading font size changed from `text-5xl lg:text-7xl` to
-               * `text-4xl sm:text-5xl lg:text-7xl`. At 320px the original
-               * `text-5xl` (3rem / 48px) overflowed the column. `text-4xl`
-               * (2.25rem) fits comfortably on the smallest common viewport.
-               */
               className="text-3xl sm:text-4xl lg:text-7xl font-display font-bold tracking-tight text-gray-900"
             />
             <AnimatedSubtitle
               text="Capture conversations, thoughts, meetings, and ideas — then retrieve them instantly using AI-powered semantic memory."
-              /*
-               * FIX: Subtitle `text-lg` unchanged but added `break-words` via
-               * Tailwind's `break-words` class to prevent long words/URLs from
-               * causing horizontal overflow on narrow viewports.
-               */
               className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl break-words"
             />
           </div>
 
-          {/* Features Grid — grid-cols-1 sm:grid-cols-2 already correct */}
+          {/* Features Grid */}
           <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-4">
             {[
               { icon: Brain, title: "AI Memory Extraction", desc: "Auto-detects intents & entities.", borderColor: "border-purple-500", iconColor: "text-purple-600", iconBg: "bg-purple-100" },
@@ -178,7 +200,7 @@ const AuthLanding = () => {
               <motion.div
                 key={idx}
                 whileHover={{ y: -4, scale: 1.02 }}
-                className={`p-3 sm:p-4 md:p-5 rounded-2xl bg-white border-2 ${feature.borderColor} group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-opacity-80 hover:shadow-xl hover:border-opacity-100`}
+                className={`p-3 sm:p-4 md:p-5 rounded-2xl bg-white border-2 ${feature.borderColor} group cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-opacity-80 hover:shadow-xl`}
               >
                 <div className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-lg ${feature.iconBg} flex items-center justify-center mb-2 sm:mb-3 md:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
                   <feature.icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${feature.iconColor}`} />
@@ -209,17 +231,12 @@ const AuthLanding = () => {
 
         {/* Right Section - Auth Card */}
         <motion.div
+          ref={authCardRef}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex justify-center lg:justify-end order-1 lg:order-2 w-full mb-0 lg:mb-0 relative z-20"
         >
-          {/*
-           * FIX: Auth card wrapper — `w-full max-w-md` is kept but the card now
-           * has `min-w-0` to prevent flex blowout. Card inner padding reduced from
-           * `p-8` to `p-5 sm:p-8` so on 320px screens the form fields don't get
-           * clipped or force horizontal scroll inside the card.
-           */}
           <div className="relative w-full max-w-sm sm:max-w-md min-w-0 px-1 sm:px-0">
             <div className="absolute -inset-1 bg-gradient-to-r from-violet-500 to-indigo-500 rounded-3xl blur opacity-25"></div>
 
@@ -299,14 +316,6 @@ const AuthLanding = () => {
                 </div>
               </div>
 
-              {/*
-               * FIX: Social login buttons changed from `grid-cols-2` to
-               * `flex flex-col xs:grid xs:grid-cols-2` pattern — but since
-               * Tailwind has no `xs` breakpoint by default, we use
-               * `grid grid-cols-1 min-[400px]:grid-cols-2` so at ≤400px
-               * (tight phones) each button gets its own row and there's no
-               * text/icon squash or overflow.
-               */}
               <div className="mt-4 sm:mt-6 grid grid-cols-1 min-[400px]:grid-cols-2 gap-2 sm:gap-3">
                 <button className="flex items-center justify-center gap-2 py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 text-xs sm:text-sm font-medium text-gray-700 hover:shadow-sm">
                   <GoogleIcon />
@@ -322,7 +331,36 @@ const AuthLanding = () => {
         </motion.div>
       </div>
 
-      <Footer />
+      {/* Main Feature Sections */}
+      <FeaturesSection />
+      <HowItWorksSection />
+      <AboutSection />
+      <BlogSection />
+      <ContactSection />
+
+      {/* Footer */}
+      <Footer
+        onOpenDocs={() => setIsDocsOpen(true)}
+        onOpenDiscord={() => setIsDiscordOpen(true)}
+        onOpenLegal={(type) => setLegalModalType(type)}
+      />
+
+      {/* Modals */}
+      <DocsModal
+        isOpen={isDocsOpen}
+        onClose={() => setIsDocsOpen(false)}
+      />
+
+      <DiscordModal
+        isOpen={isDiscordOpen}
+        onClose={() => setIsDiscordOpen(false)}
+      />
+
+      <LegalModal
+        isOpen={!!legalModalType}
+        type={legalModalType}
+        onClose={() => setLegalModalType(null)}
+      />
     </div>
   );
 };
